@@ -1,0 +1,112 @@
+
+
+
+#ifndef SERIALLOGGER_H
+#define SERIALLOGGER_H
+
+
+enum {
+	
+/*	Radio Messages*/
+  AM_RADIO_SIGNAL_MSG = 0x94,
+  AM_RADIO_SYNC_SIGNAL_MSG = 0x96,
+
+/*	Serial Messages*/
+	AM_PCO_STACK_SYNC_LOG_MSG = 0x91,
+//	AM_PCKT_LOG_MSG = 0x92,
+	AM_DEBUG_LOG_MSG = 0x93,
+	AM_LOG_PCO_SYNC_PREC_MSG = 0x95,
+
+	PROCTOR_TX_DELAY=0,
+	PROCTOR_RX_DELAY=1,
+};
+
+
+
+/*Radio Messages*/
+typedef nx_struct radio_signal_msg {
+  nx_uint32_t timeleft;
+  nx_uint8_t tx_power;
+} radio_signal_msg_t;
+
+typedef nx_struct radio_sync_signal_msg{
+	nx_uint32_t sync_signals_sent;
+}radio_sync_signal_msg_t;
+
+
+/*Serial Messages*/
+typedef nx_struct log_pco_sync_prec_msg{
+	nx_uint8_t pco_protocol;						/*Scaglione(epsilon=1) =0, */
+	nx_uint8_t tx_power;		
+	nx_uint32_t sync_signals_sent;
+	nx_uint32_t total_sent;
+	nx_uint32_t total_rec;
+	nx_int32_t ticks_to_fire;
+	nx_int32_t ticks_elasped;
+	nx_uint16_t node_id;
+//	nx_uint32_t now;
+}log_pco_sync_prec_msg_t;
+
+
+/*
+typedef nx_struct pco_stack_sync_log_msg{
+	nx_uint8_t sendRec;
+	nx_uint64_t seqNo;
+	nx_uint32_t delay;
+	nx_uint32_t phase;
+	nx_uint32_t diff;
+	nx_uint32_t coupDelay;
+	nx_uint16_t nodeID;
+}pco_stack_sync_log_msg_t;
+*/
+
+
+typedef nx_struct debug_log_msg{
+	nx_uint8_t sendRec;
+	nx_uint16_t cnt;	
+	nx_uint32_t delay;
+	nx_uint32_t phase;
+	nx_uint32_t diff;
+	nx_uint32_t new_phase_us;
+	nx_uint32_t	time_to_fire;
+	nx_uint32_t time_now;
+//	nx_uint32_t alarm_now;
+	nx_uint32_t next_fire_event;
+	nx_uint16_t nodeID;
+}debug_log_msg_t;
+
+
+void printfFloat(float toBePrinted) {
+   uint32_t fi, f0, f1, f2, f3, f4, f5;
+   char c;
+   float f = toBePrinted;
+
+   if (f<0){
+     c = '-'; f = -f;
+   } else {
+     c = ' ';
+   }
+
+   // integer portion.
+   fi = (uint32_t) f;
+
+   // decimal portion...get index for up to 3 decimal places.
+   f = f - ((float) fi);
+   f0 = f*10;   f0 %= 10;
+   f1 = f*100;  f1 %= 10;
+   f2 = f*1000; f2 %= 10;
+   f3 = f*10000; f3 %= 10;
+   f4 = f*100000; f4 %= 10;
+   f5 = f*1000000; f5 %= 10;
+   printf("%c%ld.%d%d%d%d%d%d", c, fi, (uint8_t) f0, (uint8_t) f1, (uint8_t) f2,(uint8_t) f3,(uint8_t) f4,(uint8_t) f5);
+ }
+
+
+
+
+#endif
+
+
+
+
+

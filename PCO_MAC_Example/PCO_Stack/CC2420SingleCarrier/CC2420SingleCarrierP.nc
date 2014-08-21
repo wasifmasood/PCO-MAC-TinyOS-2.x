@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2005-2006 Arch Rock Corporation
- * All rights reserved.
-*/
 /**
  * This application provides an interface to emit or detect
  * a continuous unmodulated carrier on platforms using the

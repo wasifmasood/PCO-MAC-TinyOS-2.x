@@ -1,0 +1,142 @@
+/**
+ *
+ @ author Wasif Masood
+ @ Created: Sept 10, 2012
+ *
+ */
+
+#include "math.h"
+#include "SerialLogger.h"
+#include <UserButton.h>
+
+#include <inttypes.h>
+
+//#include "hardware.h"
+
+module TestPCOMACP{
+
+	
+	uses {
+
+		interface SplitControl as RadioControl;
+
+		interface Alarm<T32khz, uint32_t> as GPIOAlarm;
+
+		interface AMPacket;
+
+		interface Boot;
+
+  	interface CC2420SingleCarrier as PCOMAC;
+
+		interface Random;
+
+		interface Leds;
+	}
+}
+
+implementation {
+
+
+	/***************************** Local Variables *********************************/
+
+	bool busysending=FALSE;
+
+
+	uint16_t sent_cnt=0, rec_cnt=0;
+
+	uint32_t PHASE=65535UL;
+
+	
+	uint8_t m_tx_power;	
+
+
+	inline int Send(){
+ 
+	
+		if(!busysending ){
+			call PCOMAC.emit(10,m_tx_power);
+			busysending=TRUE;
+		}
+	
+
+
+		return FALSE;
+	}
+
+
+	async event void GPIOAlarm.fired() {
+
+			call GPIOAlarm.start( PHASE );		
+
+			Send();
+  }
+
+
+	async event void PCOMAC.SFDDetected(uint32_t ts32){		
+
+		uint32_t time_to_fire;
+	
+		rec_cnt++;
+
+		printf("PCO Signal Receveid\n");printfflush();
+		
+	} 
+
+
+
+	async event void PCOMAC.emitDone(uint8_t status, uint32_t tx_delay){
+
+		busysending = FALSE;
+
+		sent_cnt++;
+
+		call Leds.led1Toggle();
+
+		printf("PCO Signal Sent\n");printfflush();
+	}
+
+
+
+
+
+
+
+	event void Boot.booted(){
+
+		call RadioControl.start();
+	}
+
+	event void RadioControl.startDone(error_t error) {
+
+		m_tx_power = CC2420_DEF_RFPOWER;
+
+		call GPIOAlarm.startAt( call GPIOAlarm.getNow(), PHASE);	
+
+	}
+
+	event void RadioControl.stopDone(error_t error) { }
+
+	async event void PCOMAC.detectDone(bool detection){ }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

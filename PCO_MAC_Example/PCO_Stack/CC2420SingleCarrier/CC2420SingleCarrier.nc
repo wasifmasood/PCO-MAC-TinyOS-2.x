@@ -1,14 +1,10 @@
-/*
- * Copyright (c) 2005-2006 Arch Rock Corporation
- * All rights reserved.
-*/
 /**
  * This application provides an interface to emit or detect
  * a continuous unmodulated carrier on platforms using the
  * CC2420 radio chip.
  * Please refer to CC2420 datasheet: 33 Transmitter Test Modes, page 54 
  *
- * @author	wasif.masood@aau.at, micha.rappaport@aau.at
+ * @author	micha.rappaport@aau.at, wasif.masood@aau.at
  * @date	25.01.2013
  * @see		CC2420 data sheet
  */

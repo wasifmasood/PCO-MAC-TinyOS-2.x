@@ -1,0 +1,66 @@
+
+
+#ifndef SYNCHRONIZER_H
+#define SYNCHRONIZER_H
+
+/**
+ * @author Wasif Masood 
+ * $Date: 2012/08/29 
+
+	For a Alram of 32KHz and 32-bit width, we have
+
+	*	32768 ticks = 1s
+	*	1 tick = 0.03 ms
+
+	For Phi = 1s
+		SYNC_TIME_PERIOD_TICKS = 32768,   // ~ 1 s		
+		INHIBITORY_LIMIT = 16384
+		REFRACTOR_TIME {2.5, 5, 10} ~ {819,1639,3277}							// 2.5% of phi = 819
+
+	For Phi = 2s
+		SYNC_TIME_PERIOD_TICKS = 65536,   // ~ 1 s		
+		INHIBITORY_LIMIT = 32768
+		REFRACTOR_TIME {2.5, 5, 10} ~ {1639, 3277, 65534}							// 2.5% of phi = 819
+
+
+ */
+
+
+enum {
+	AM_ANALYZE_PCKT_LOG_MSG = 0x91,
+	AM_DEBUG_LOG_MSG = 0x92	
+};
+
+
+typedef nx_struct analyze_pckt_log_msg{
+
+	nx_uint8_t sendRec;
+	nx_uint64_t seqNo;
+	nx_uint32_t delay;
+	nx_uint32_t phase;
+	nx_uint32_t diff;
+	nx_uint16_t nodeID;
+}analyze_pckt_log_msg_t;
+
+
+typedef nx_struct debug_log_msg{
+	nx_uint8_t sendRec;
+	nx_uint16_t cnt;	
+	nx_uint32_t delay;
+	nx_uint32_t phase;
+	nx_uint32_t diff;
+	nx_uint32_t new_phase_us;
+	nx_uint32_t	time_to_fire;
+	nx_uint32_t time_now;
+//	nx_uint32_t alarm_now;
+	nx_uint32_t next_fire_event;
+	nx_uint16_t nodeID;
+}debug_log_msg_t;
+
+
+#endif
+
+
+
+
+
